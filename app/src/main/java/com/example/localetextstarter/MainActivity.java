@@ -70,15 +70,34 @@ public class MainActivity extends AppCompatActivity {
         myDate.setTime(expirationDate);
 
         // TODO: Format the date for the locale.
-
+        TextView expiredDateTv = findViewById(R.id.date);
+        String formattedExpiredDate = DateFormat.getDateInstance().format(myDate);
+        expiredDateTv.setText(formattedExpiredDate);
 
         // TODO: Apply the exchange rate and calculate the price.
+        String deviceLocale = Locale.getDefault().getCountry();
 
+        switch (deviceLocale) {
+            case "ID":
+                mPrice = mPrice * mIdExchangeRate;
+                break;
+            case "EG":
+                mPrice = mPrice * mEgExchangeRate;
+                break;
+            default:
+                mCurrencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        }
+
+        TextView priceTv = findViewById(R.id.price);
+
+        String formattedPrice = mCurrencyFormat.format(mPrice);
+        priceTv.setText(formattedPrice);
 
         // TODO: Show the price string.
 
         // Get the EditText view for the entered quantity.
         final EditText enteredQuantity = (EditText) findViewById(R.id.quantity);
+        final TextView totalTv = findViewById(R.id.total);
         // Add an OnEditorActionListener to the EditText view.
         enteredQuantity.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -96,14 +115,26 @@ public class MainActivity extends AppCompatActivity {
                         NumberFormat mNumberFormat = NumberFormat.getNumberInstance();
 
                         // TODO: Parse string in view v to a number.
+                        try {
+                            mInputQuantity = mNumberFormat.parse(v.getText().toString()).intValue();
+                        } catch (ParseException e) {
+                            v.setError(getText(R.string.enter_number));
+                            e.printStackTrace();
+                        }
+
+                        String formattedQuantity = mNumberFormat.format(mInputQuantity);
+                        v.setText(formattedQuantity);
 
                         // TODO: Convert to string using locale's number format.
+                        double totalPrice = mInputQuantity * mPrice;
+                        String formattedTotal = mCurrencyFormat.format(totalPrice);
 
                         // TODO: Homework: Calculate the total amount from price and quantity.
 
                         // TODO: Homework: Use currency format for France (FR) or Israel (IL).
 
                         // TODO: Homework: Show the total amount string.
+                        totalTv.setText(formattedTotal);
 
                         return true;
                     }

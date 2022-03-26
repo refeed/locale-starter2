@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             case "ID":
                 mPrice = mPrice * mIdExchangeRate;
                 break;
-            case "EG":
+            case "IL":
                 mPrice = mPrice * mEgExchangeRate;
                 break;
             default:
